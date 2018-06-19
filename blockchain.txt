@@ -1,0 +1,2 @@
+[{"previous_hash": "", "index": 0, "transactions": [], "proof": 100}, {"previous_hash": "68da5267793e1fc7bd98d9cc01cf91e38daa67cbbd7b646bcd99b4dc3df93eb1", "index": 1, "transactions": [{"sender": "MINING", "recipient": "Darrell", "amount": 10}], "proof": 3982}, {"previous_hash": "6db18abaf3adf2b7bc68ba25a07c765dbccc27c8ca85b6102ac619659c1f97e8", "index": 2, "transactions": [{"sender": "Darrell", "recipient": "nathan", "amount": 5.0}, {"sender": "MINING", "recipient": "Darrell", "amount": 10}], "proof": 17519}]
+[]
