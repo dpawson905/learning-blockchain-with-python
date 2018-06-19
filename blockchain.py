@@ -1,7 +1,10 @@
 import functools
+import hashlib
+import json
 
 # Initializing our block chain list
 MINING_REWARD = 10
+
 genesis_block = {
     'previous_hash': '',
     'index': 0,
@@ -14,7 +17,12 @@ participants = {'Darrell'}
 
 
 def hash_block(block):
-    return '-'.join([str(block[key]) for key in block])
+    """Hashes a block and returns a string representation of it.
+
+    Arguments:
+        :block: The block that should be hashed
+    """
+    return hashlib.sha256(json.dumps(block).encode()).hexdigest()
 
 
 def get_balance(participant):
