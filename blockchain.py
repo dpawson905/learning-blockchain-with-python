@@ -1,7 +1,9 @@
 from functools import reduce
 import hashlib as hl
-import json
 from collections import OrderedDict
+
+# Import External files
+from hash_util import hash_string_256, hash_block
 
 # Initializing our block chain list
 MINING_REWARD = 10
@@ -18,18 +20,9 @@ owner = 'Darrell'
 participants = {'Darrell'}
 
 
-def hash_block(block):
-    """Hashes a block and returns a string representation of it.
-
-    Arguments:
-        :block: The block that should be hashed
-    """
-    return hl.sha256(json.dumps(block, sort_keys=True).encode()).hexdigest()
-
-
 def valid_proof(transactions, last_hash, proof):
     guess = (str(transactions) + str(last_hash) + str(proof)).encode()
-    guess_hash = hl.sha256(guess).hexdigest()
+    guess_hash = hash_string_256(guess)
     print(guess_hash)
     return guess_hash[0:3] == '6f6'
 
