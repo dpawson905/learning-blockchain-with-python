@@ -1,5 +1,5 @@
-import functools
-import hashlib
+from functools import reduce
+import hashlib as hl
 import json
 
 # Initializing our block chain list
@@ -22,21 +22,27 @@ def hash_block(block):
     Arguments:
         :block: The block that should be hashed
     """
-    return hashlib.sha256(json.dumps(block).encode()).hexdigest()
+    return hl.sha256(json.dumps(block).encode()).hexdigest()
 
 
 def get_balance(participant):
     tx_sender = [[tx['amount'] for tx in block['transactions']
                   if tx['sender'] == participant] for block in blockchain]
+
     open_tx_sender = [tx['amount']
                       for tx in open_transactions if tx['sender'] == participant]
+
     tx_sender.append(open_tx_sender)
-    amount_sent = functools.reduce(
+
+    amount_sent = reduce(
         lambda tx_sum, tx_amt: tx_sum + sum(tx_amt) if len(tx_amt) > 0 else tx_sum + 0, tx_sender, 0)
+
     tx_recipient = [[tx['amount'] for tx in block['transactions']
                      if tx['recipient'] == participant] for block in blockchain]
-    amount_received = functools.reduce(
+
+    amount_received = reduce(
         lambda tx_sum, tx_amt: tx_sum + sum(tx_amt) if len(tx_amt) > 0 else tx_sum + 0, tx_recipient, 0)
+
     return amount_received - amount_sent
 
 
@@ -75,8 +81,13 @@ def add_transaction(recipient, sender=owner, amount=1.0):
 
 
 def mine_block():
+    """Create a new block and add open transactions to it. """
+    # Fetch the currently last block of the blockchain
     last_block = blockchain[-1]
+    # Hash the last block to be able to compare it to the stored hash value
     hashed_block = hash_block(last_block)
+    print(hashed_block)
+    # Miners should be rewarded, so let's create a reward transaction
     reward_transaction = {
         'sender': 'MINING',
         'recipient': owner,
