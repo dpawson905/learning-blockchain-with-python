@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 from blockchain import Blockchain
-from verification import Verification
+from utility.verification import Verification
 
 
 class Node:
@@ -45,7 +45,8 @@ class Node:
                 if self.blockchain.add_transaction(recipient, self.id, amount=amount):
                     print('Added transaction')
                 else:
-                    print('Transaction failed')
+                    print(
+                        f'Transaction failed you tried to send {amount} but you do not have sufficient funds!')
                 print(self.blockchain.get_open_transactions())
             elif user_choice == '2':
                 self.blockchain.mine_block()
