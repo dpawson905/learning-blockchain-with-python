@@ -9,6 +9,7 @@ class Node:
     def __init__(self):
         # self.wallet.public_key = str(uuid4())
         self.wallet = Wallet()
+        self.wallet.create_keys()
         self.blockchain = Blockchain(self.wallet.public_key)
 
     def get_transaction_value(self):
@@ -35,6 +36,7 @@ class Node:
         print('4: Check transaction validity')
         print('5: Create wallet')
         print('6: Load wallet')
+        print('7: Save wallet')
         print('q: Quit\n')
 
     def listen_for_input(self):
@@ -45,14 +47,17 @@ class Node:
             if user_choice == '1':
                 tx_data = self.get_transaction_value()
                 recipient, amount = tx_data
-                if self.blockchain.add_transaction(recipient, self.wallet.public_key, amount=amount):
+                signiture = self.wallet.sign_transaction(
+                    self.wallet.public_key, recipient, amount=amount)
+                if self.blockchain.add_transaction(recipient, self.wallet.public_key, signiture, amount=amount):
                     print('Added transaction')
                 else:
                     print(
                         f'Transaction failed you tried to send {amount} but you do not have sufficient funds!')
                 print(self.blockchain.get_open_transactions())
             elif user_choice == '2':
-                self.blockchain.mine_block()
+                if not self.blockchain.mine_block():
+                    print('Mining has failed, No wallet loaded.')
             elif user_choice == '3':
                 self.print_blockchain_elements()
             elif user_choice == '4':
@@ -62,8 +67,12 @@ class Node:
                     print('There are invalid transactions')
             elif user_choice == '5':
                 self.wallet.create_keys()
+                self.blockchain = Blockchain(self.wallet.public_key)
             elif user_choice == '6':
-                pass
+                self.wallet.load_keys()
+                self.blockchain = Blockchain(self.wallet.public_key)
+            elif user_choice == '7':
+                self.wallet.save_keys()
             elif user_choice in ['q', 'Q']:
                 waiting_for_input = False
             else:
